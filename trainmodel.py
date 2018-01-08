@@ -1,8 +1,8 @@
 import numpy as np
 from simplenet import simplenet
 
-WIDTH  = 80
-HEIGHT = 60
+WIDTH  = 8
+HEIGHT = 6
 LR = 1e-3
 EPOCHS = 20
 

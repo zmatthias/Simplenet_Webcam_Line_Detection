@@ -7,10 +7,9 @@ trainingData = []
 
 cap = cv2.VideoCapture(0)
 
-
 def GetWebcamImage():
     ret, webcamImage = cap.read()
-    webcamImage = cv2.resize(webcamImage, (80, 60))
+    webcamImage = cv2.resize(webcamImage, (8, 6))
     webcamImage = cv2.cvtColor(webcamImage, cv2.COLOR_BGR2GRAY)
     webcamImage = cv2.flip(webcamImage, 1)
     return webcamImage
