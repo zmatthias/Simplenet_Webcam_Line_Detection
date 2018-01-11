@@ -4,8 +4,9 @@ from random import shuffle
 import time
 
 trainingData = []
+validationData = []
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 def GetWebcamImage():
     ret, webcamImage = cap.read()
@@ -15,35 +16,66 @@ def GetWebcamImage():
     return webcamImage
 
 def ShowImage(image):
+    image = cv2.resize(image, (400, 300), interpolation=cv2.INTER_NEAREST)
     cv2.imshow('frame', image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         cap.release()
 
-def RecordImages(n):
+
+def RecordTrainingImages(n):
     for i in range(n):
         image = GetWebcamImage()
         ShowImage(image)
         trainingData.append([image, direction])
         print(direction)
 
+def RecordValidationImages(n):
+    for i in range(n):
+        image = GetWebcamImage()
+        ShowImage(image)
+        validationData.append([image, direction])
+        print(direction)
+
 def SaveTrainingData():
     shuffle(trainingData)
     np.save("trainingData.npy", trainingData)
 
-print("3 seconds until recording 'left'")
+def SaveValidationData():
+    shuffle(validationData)
+    np.save("validationData.npy", validationData)
+
+print("3 seconds until recording 'left-train'")
 time.sleep(3)
 direction = [1,0,0]
-RecordImages(500)
+RecordTrainingImages(1000)
 
-print("3 seconds until recording 'straight'")
+print("3 seconds until recording 'straight-train'")
 time.sleep(3)
 direction = [0,1,0]
-RecordImages(500)
+RecordTrainingImages(1000)
 
-print("3 seconds until recording 'right'")
+print("3 seconds until recording 'right-train'")
 time.sleep(3)
 direction = [0,0,1]
-RecordImages(500)
+RecordTrainingImages(1000)
 
 SaveTrainingData()
+
+print("3 seconds until recording 'left-val'")
+time.sleep(3)
+direction = [1,0,0]
+RecordValidationImages(1000)
+
+print("3 seconds until recording 'straight-val'")
+time.sleep(3)
+direction = [0,1,0]
+RecordValidationImages(1000)
+
+print("3 seconds until recording 'right-val'")
+time.sleep(3)
+direction = [0,0,1]
+RecordValidationImages(1000)
+
+SaveValidationData()
+
 cv2.destroyAllWindows()

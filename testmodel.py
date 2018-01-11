@@ -13,6 +13,7 @@ MODEL_NAME = 'simplenet.model'
 model = simplenet(WIDTH,HEIGHT,LR)
 model.load(MODEL_NAME)
 
+
 def printPrediction(prediction):
 
     forwardCertainty = prediction[1]*100
@@ -37,13 +38,6 @@ while(True):
     webcamImage = cv2.flip(webcamImage, 1)
     prediction = model.predict([webcamImage.reshape(WIDTH,HEIGHT,1)])[0]
     printPrediction(prediction)
+    webcamImage = cv2.resize(webcamImage, (400, 300), interpolation=cv2.INTER_NEAREST)
 
-    cv2.imshow('frame', webcamImage)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-      break
-
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
 
