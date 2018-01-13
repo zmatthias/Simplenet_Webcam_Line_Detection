@@ -1,38 +1,33 @@
 import numpy as np
 from simplenet import simplenet
-from tflearn.data_utils import to_categorical
 
-WIDTH  = 8
-HEIGHT = 6
-LR = 1e-3
-EPOCHS = 30
+epochs = 1000
+inputWidth = 8
+inputHeight = 6
 
-MODEL_NAME = 'simplenet.model'
+modelName = 'simplenet.model'
 
-model = simplenet(WIDTH,HEIGHT,LR)
+model = simplenet()
 
-savedTrainingData = np.load("trainingData.npy")
-savedValidationData = np.load("validationData.npy")
+savedTrainSet = np.load("trainSet.npy")
+trainSet = savedTrainSet[:-750]
+valSet = savedTrainSet[-750:]
 
+# each image is reshaped from a matrix into a single array
+trainImageSet = np.array([i[0] for i in trainSet]).reshape(-1, inputWidth, inputHeight, 1)
+trainSolutionSet = np.array([i[1] for i in trainSet])
 
-# each image is reshaped from a 60x80 matrix into a single array
-X = np.array([i[0] for i in savedTrainingData]).reshape(-1, WIDTH, HEIGHT, 1)
-#X = to_categorical(X, nb_classes=1)
+valImageSet = np.array([i[0] for i in valSet]).reshape(-1, inputWidth, inputHeight, 1)
+valSolutionSet = np.array([i[1] for i in valSet])
 
+model.fit({'input': trainImageSet}, {'targets': trainSolutionSet}, n_epoch=epochs, validation_set=({'input': valImageSet}, {'targets': valSolutionSet}),
+          snapshot_step=500, show_metric=True, run_id=modelName)
 
-Y = np.array([i[1] for i in savedTrainingData])
-#Y = to_categorical(Y, nb_classes=1)
+savedEvalSet = np.load("evalSet.npy")
+evalImageSet = np.array([i[0] for i in savedEvalSet]).reshape(-1, inputWidth, inputHeight, 1)
+evalSolutionSet = np.array([i[1] for i in savedEvalSet])
 
-test_x = np.array([i[0] for i in savedValidationData]).reshape(-1, WIDTH, HEIGHT, 1)
-#test_x = to_categorical(test_x, nb_classes=3)
-
-test_y = np.array([i[1] for i in savedValidationData])
-#test_y = to_categorical(test_y, nb_classes=3)
-
-
-model.fit({'input': X}, {'targets': Y}, n_epoch=EPOCHS, validation_set=({'input': test_x}, {'targets': test_y}),
-          snapshot_step=500, show_metric=True, run_id=MODEL_NAME)
-
-#model.evaluate(test_x,test_y )
-
-model.save(MODEL_NAME)
+print(model.evaluate(evalImageSet, evalSolutionSet))
+print(model.evaluate(valImageSet, valSolutionSet))
+print(model.evaluate(trainImageSet,trainSolutionSet))
+model.save(modelName)
