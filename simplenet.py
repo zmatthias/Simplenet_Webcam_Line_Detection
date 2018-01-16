@@ -1,8 +1,11 @@
 import tflearn
 from tflearn.layers.estimator import regression
 
+def simplenet():
 
-def simplenet(width, height, lr):
+    width = 128
+    height = 72
+    lr = 0.001
 
     #one input layer with 80x60=4800 Neurons
     net = tflearn.input_data(shape=[None, width,height,1], name='input')
@@ -16,5 +19,4 @@ def simplenet(width, height, lr):
 
     model = tflearn.DNN(net, checkpoint_path='model_simplenet',
                         max_checkpoints=1, tensorboard_verbose=2, tensorboard_dir='log')
-
     return model

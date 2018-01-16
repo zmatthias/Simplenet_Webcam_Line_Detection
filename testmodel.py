@@ -1,18 +1,13 @@
 from __future__ import print_function
-
 import cv2
 from simplenet import simplenet
-import time
-cap = cv2.VideoCapture(0)
+capInstance = cv2.VideoCapture(0)
 
-WIDTH  = 8
-HEIGHT = 6
-LR = 1e-3
-
-MODEL_NAME = 'simplenet.model'
-model = simplenet(WIDTH,HEIGHT,LR)
-model.load(MODEL_NAME)
-
+modelName = 'simplenet.model'
+model = simplenet()
+model.load(modelName)
+inputWidth = 128
+inputHeight = 72
 
 def printPrediction(prediction):
 
@@ -30,14 +25,16 @@ def printPrediction(prediction):
 while(True):
 
     # Capture frame-by-frame
-    #time.sleep(1)
-    ret, webcamImage = cap.read()
+    ret, camImage = capInstance.read()
 
-    webcamImage = cv2.resize(webcamImage, (8, 6))
-    webcamImage = cv2.cvtColor(webcamImage, cv2.COLOR_BGR2GRAY)
-    webcamImage = cv2.flip(webcamImage, 1)
-    prediction = model.predict([webcamImage.reshape(WIDTH,HEIGHT,1)])[0]
+    camImage = cv2.resize(camImage, (inputWidth, inputHeight))
+    camImage = cv2.cvtColor(camImage, cv2.COLOR_BGR2GRAY)
+    camImage = cv2.flip(camImage, 1)
+    prediction = model.predict([camImage.reshape(inputWidth,inputHeight,1)])[0]
     printPrediction(prediction)
-    webcamImage = cv2.resize(webcamImage, (400, 300), interpolation=cv2.INTER_NEAREST)
+    camImage = cv2.resize(camImage, (512, 288), interpolation=cv2.INTER_NEAREST)
 
+    cv2.imshow('frame', camImage)
 
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
