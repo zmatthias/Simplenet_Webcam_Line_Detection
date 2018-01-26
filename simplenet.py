@@ -9,8 +9,8 @@ def simplenet():
     #one input layer with 80x60=4800 Neurons
     net = tflearn.input_data(shape=[None, width,height,1], name='input')
     #one hidden layer with 10 neurons
-    #net = tflearn.fully_connected(net, 10)
-    #net = tflearn.fully_connected(net, 10)
+    net = tflearn.fully_connected(net, 10)
+    net = tflearn.fully_connected(net, 10)
     #net = tflearn.fully_connected(net, 10)
     #net = tflearn.fully_connected(net, 10)
 

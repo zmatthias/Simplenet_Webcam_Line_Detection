@@ -7,7 +7,7 @@ cap.set(4, 72)
 while(True):
 
     ret, webcamImage = cap.read()
-    cv2.imshow('frame', webcamImage)
+    cv2.imshow('frame', webcamIqmage)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
       break

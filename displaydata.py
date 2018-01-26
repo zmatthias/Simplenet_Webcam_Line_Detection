@@ -7,7 +7,7 @@ def displayData(dataToDisplay):
         choice = data[1]
 
         print("press Enter")
-        input()
+        raw_input()
         print(choice)
         image = cv2.resize(image, (512, 288),interpolation = cv2.INTER_NEAREST)
         cv2.imshow('test', image)
